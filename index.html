@@ -700,17 +700,17 @@ $("orderForm").addEventListener("submit", async (e) => {
   }
 
   const fd = new FormData();
-  fd.append("name", name);
-  fd.append("phone", phone);
-  fd.append("service", service);
-  fd.append("notes", $("notes").value.trim());
-  fd.append("workType", work);
-  fd.append("workService", work === "Other" ? otherName : "");
-  fd.append("quantity", String(qty));
-  fd.append("payment", payment);
-  fd.append("location", fullForm ? $("locationText").value : "");
-  fd.append("maps", fullForm ? $("locationText").dataset.maps || "" : "");
-  for (const f of files) fd.append("files", f);
+fd.append("name", name);
+fd.append("phone", phone);
+fd.append("service", service);
+fd.append("notes", $("notes").value.trim());
+fd.append("workType", work || "");
+fd.append("workService", work === "Other" ? otherName : "");
+fd.append("quantity", String(qty > 0 ? qty : 1));
+fd.append("payment", payment || "");
+fd.append("location", fullForm ? $("locationText").value : "");
+fd.append("maps", fullForm ? $("locationText").dataset.maps || "" : "");
+for (const f of files) fd.append("files", f);
 
   submitBtn.disabled = true;
   try {
@@ -991,19 +991,28 @@ function downloadOrderInfo(id) {
 
 async function downloadFile(orderId, fileId) {
   try {
-    const res = await apiFetch(`/api/orders/${encodeURIComponent(orderId)}/files/${encodeURIComponent(fileId)}`);
+    async function downloadFile(orderId, fileId) {
+  try {
+    const res = await apiFetch(
+      `/api/orders/${encodeURIComponent(orderId)}/files/${encodeURIComponent(fileId)}/download`
+    );
+
     if (!res.ok) throw new Error("File not found.");
+
     const blob = await res.blob();
     const disposition = res.headers.get("Content-Disposition") || "";
     const match = /filename="?([^"]+)"?/.exec(disposition);
     const filename = match ? match[1] : "download";
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
+
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
+
     setTimeout(() => URL.revokeObjectURL(url), 3000);
   } catch (e) {
     showToast("Unable to download the selected file.");
