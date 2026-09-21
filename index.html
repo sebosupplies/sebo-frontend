@@ -10,8 +10,8 @@
 <link rel="preconnect" href="https://sebo-backend-production-7064.up.railway.app" crossorigin>
 <link rel="dns-prefetch" href="https://sebo-backend-production-7064.up.railway.app">
 <!-- Perf: preload only the first (visible) hero background, sized per device so phones don't fetch the desktop image -->
-<link rel="preload" as="image" fetchpriority="high" media="(max-width:700px)" href="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1200&q=90">
-<link rel="preload" as="image" fetchpriority="high" media="(min-width:701px)" href="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=2200&q=90">
+<link rel="preload" as="image" fetchpriority="high" media="(max-width:700px)" href="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fm=avif&fit=crop&w=1000&q=65">
+<link rel="preload" as="image" fetchpriority="high" media="(min-width:701px)" href="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fm=avif&fit=crop&w=1800&q=65">
 <style>
 :root{
   --blue:#0b63ce;--blue2:#084b9a;--green:#138a45;--red:#d92828;
@@ -22,12 +22,12 @@
 html{scroll-behavior:smooth}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:transparent;min-height:100vh}
 body::before,body::after{content:"";position:fixed;inset:0;z-index:-3;background:transparent}
-.wallpaper{position:fixed;inset:0;z-index:-2;overflow:hidden;background:#fff}
-.wallpaper .slide{position:absolute;inset:0;background-position:center;background-size:cover;opacity:0;transition:opacity 1.5s ease;filter:none}
+.wallpaper{position:fixed;inset:0;z-index:-2;overflow:hidden;background:#0a0e14}
+.wallpaper .slide{position:absolute;inset:0;background-position:center;background-size:cover;opacity:0;transition:opacity 1.5s ease;filter:brightness(.6) saturate(1.05) contrast(1.05)}
 .wallpaper .slide.active{opacity:1}
-.wallpaper .hero-bg{background-image:url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=2200&q=90')}
-@media(max-width:700px){.wallpaper .hero-bg{background-image:url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1200&q=90')}}
-.wallpaper::after{content:"";position:absolute;inset:0;background:transparent;z-index:2}
+.wallpaper .hero-bg{background-image:url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fm=avif&fit=crop&w=1800&q=65')}
+@media(max-width:700px){.wallpaper .hero-bg{background-image:url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fm=avif&fit=crop&w=1000&q=65')}}
+/* Keep the wallpaper fully natural: no dark overlay is applied. */
 .container{width:min(1200px,94%);margin:auto}
 header{padding:22px 0 16px}
 .brand{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
@@ -151,12 +151,8 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
 <body>
 <div class="wallpaper" aria-hidden="true">
   <div class="slide active hero-bg"></div>
-  <div class="slide" data-bg="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2200&q=90" data-bg-m="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=90"></div>
-  <div class="slide" data-bg="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=2200&q=90" data-bg-m="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&q=90"></div>
-  <div class="slide" data-bg="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=2200&q=90" data-bg-m="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?auto=format&fit=crop&w=1200&q=90"></div>
-  <div class="slide" data-bg="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=2200&q=90" data-bg-m="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=90"></div>
-  <div class="slide" data-bg="https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=2200&q=90" data-bg-m="https://images.unsplash.com/photo-1541140532154-b024d705b90a?auto=format&fit=crop&w=1200&q=90"></div>
-  <div class="slide" data-bg="https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=2200&q=90" data-bg-m="https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=1200&q=90"></div>
+  <div class="slide" data-bg="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fm=avif&fit=crop&w=1800&q=65" data-bg-m="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fm=avif&fit=crop&w=1000&q=65"></div>
+  <div class="slide" data-bg="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fm=avif&fit=crop&w=1800&q=65" data-bg-m="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fm=avif&fit=crop&w=1000&q=65"></div>
 </div>
 
 <header class="container">
@@ -198,7 +194,9 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
         </div>
         <div class="full"><label for="notes">Maelezo ya Ziada</label><textarea id="notes" placeholder="Andika maelezo ya kazi yako..."></textarea></div>
 
-        <div class="full">
+        <div id="serviceInfoMessage" class="full card" style="display:none;border-left:6px solid var(--gold);background:#fff8df"></div>
+
+        <div id="workTypeSection" class="full">
           <label>Aina ya Kazi</label>
           <div class="work-types">
             <div class="choice"><input type="radio" id="bw" name="workType" value="Black & White"><label for="bw">Black &amp; White</label></div>
@@ -216,13 +214,13 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
           <input id="quantity" type="number" min="1" step="1">
         </div>
 
-        <div class="full">
+        <div id="fileSection" class="full">
           <label for="files">Pakia Mafaili (PDF, Word, Excel, JPG, PNG)</label>
           <input id="files" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
           <div id="fileHint" class="price-desc">Unaweza kuchagua mafaili mengi kwa oda moja. Kila faili linaweza kuwa hadi 2GB, kulingana na nafasi inayopatikana kwenye browser/device.</div>
         </div>
 
-        <div class="full">
+        <div id="locationSection" class="full">
           <label>Location</label>
           <div class="location-row">
             <input id="locationText" readonly placeholder="Bonyeza kitufe kupata GPS location">
@@ -232,7 +230,7 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
           <div style="margin-top:4px;font-weight:800">WhatsApp: 0664381164</div>
         </div>
 
-        <div class="full">
+        <div id="paymentSection" class="full">
           <label>Njia ya Malipo</label>
           <div class="payments">
             <div class="choice"><input type="radio" id="mpesa" name="payment" value="M-Pesa"><label for="mpesa">M-Pesa</label></div>
@@ -556,14 +554,78 @@ renderPromos();
 
 document.querySelectorAll('input[name="workType"]').forEach((x) =>
   x.addEventListener("change", () => {
-    $("quantityWrap").style.display = "block";
-    $("quantity").required = true;
     const other = x.value === "Other";
+    // IDADI YA COPY / KURASA is not applicable once a free-text "Other" service is used.
+    $("quantityWrap").style.display = other ? "none" : "block";
+    $("quantity").required = !other;
+    if (other) $("quantity").value = "";
     $("otherWorkWrap").style.display = other ? "block" : "none";
     $("otherWorkName").required = other;
     if (!other) $("otherWorkName").value = "";
   })
 );
+
+/* =========================
+   SERVICE-BASED FORM BEHAVIOR
+   PHOTOCOPY and PRINTING keep the full order form. Any other selected
+   service hides Aina ya Kazi / Mafaili / Location / Njia ya Malipo /
+   Idadi ya Copy-Kurasa and shows a short "visit our office" message
+   instead — the same "Tuma oda sasa" button still submits the (now
+   simplified) order.
+   ========================= */
+const FULL_FORM_SERVICE_KEYWORDS = ["photocopy", "printing"];
+function isFullFormService(serviceName) {
+  const v = (serviceName || "").trim().toLowerCase();
+  return FULL_FORM_SERVICE_KEYWORDS.some((k) => v.includes(k));
+}
+function renderServiceInfoMessage(serviceName) {
+  const box = $("serviceInfoMessage");
+  const name = $("fullName").value.trim() || "Mteja";
+  box.innerHTML = `<p style="margin:0 0 8px"><strong>Hello!! ${esc(name)} 👋</strong></p>
+<p style="margin:0 0 8px">🌟 Thank you for trusting <strong>SEBO SUPPLIES &amp; STATIONARY!</strong></p>
+<p style="margin:0 0 8px">For this service, please <strong>visit our office at IKUTI PRIMARY</strong>, or contact us at <strong>0664381164</strong> so we can solve your problem <strong>quickly</strong> and <strong>professionally</strong>.</p>
+<p style="margin:0 0 8px">👉 Please tap “<strong>Tuma oda sasa</strong>” below so we can know about your visit and prepare to serve you <strong>quickly</strong> and with <strong>quality</strong>.</p>
+<p style="margin:0"><strong>Growth With Us</strong> 🚀</p>`;
+}
+function updateServiceView() {
+  const service = $("service").value;
+  const full = !service || isFullFormService(service);
+
+  $("workTypeSection").style.display = full ? "" : "none";
+  $("fileSection").style.display = full ? "" : "none";
+  $("locationSection").style.display = full ? "" : "none";
+  $("paymentSection").style.display = full ? "" : "none";
+
+  if (!full) {
+    // These fields are not required for this service — clear/reset them.
+    $("quantityWrap").style.display = "none";
+    $("quantity").required = false;
+    $("quantity").value = "";
+    $("otherWorkWrap").style.display = "none";
+    $("otherWorkName").required = false;
+    $("otherWorkName").value = "";
+    document.querySelectorAll('input[name="workType"]').forEach((r) => (r.checked = false));
+    document.querySelectorAll('input[name="payment"]').forEach((r) => (r.checked = false));
+    $("mobileNote").style.display = "none";
+    $("cashNote").style.display = "none";
+    $("locationText").value = "";
+    delete $("locationText").dataset.maps;
+    $("files").value = "";
+  }
+
+  if (service && !full) {
+    renderServiceInfoMessage(service);
+    $("serviceInfoMessage").style.display = "block";
+  } else {
+    $("serviceInfoMessage").style.display = "none";
+    $("serviceInfoMessage").innerHTML = "";
+  }
+}
+$("service").addEventListener("change", updateServiceView);
+$("fullName").addEventListener("input", () => {
+  // Keep "{jina la mteja}" in the message live as the customer types their name.
+  if ($("serviceInfoMessage").style.display === "block") renderServiceInfoMessage($("service").value);
+});
 document.querySelectorAll('input[name="payment"]').forEach((x) =>
   x.addEventListener("change", () => {
     const mobile = ["M-Pesa", "Tigo Pesa", "Airtel Money"].includes(x.value);
@@ -602,22 +664,36 @@ $("orderForm").addEventListener("submit", async (e) => {
   const name = $("fullName").value.trim();
   const phone = $("phone").value.trim();
   const selectedService = $("service").value;
-  const work = document.querySelector('input[name="workType"]:checked')?.value || "";
-  const otherName = $("otherWorkName").value.trim();
-  const service = work === "Other" ? otherName || "Other service" : selectedService;
-  const qty = Number($("quantity").value || 0);
-  const payment = document.querySelector('input[name="payment"]:checked')?.value || "";
+  const fullForm = !selectedService || isFullFormService(selectedService);
 
-  if (!service || !work || qty < 1 || !payment) {
-    showToast("Please complete work type, quantity and payment method.");
+  let service = selectedService;
+  let work = "";
+  let otherName = "";
+  let qty = 0;
+  let payment = "";
+
+  if (fullForm) {
+    work = document.querySelector('input[name="workType"]:checked')?.value || "";
+    otherName = $("otherWorkName").value.trim();
+    service = work === "Other" ? otherName || "Other service" : selectedService;
+    qty = work === "Other" ? 1 : Number($("quantity").value || 0);
+    payment = document.querySelector('input[name="payment"]:checked')?.value || "";
+
+    if (!service || !work || (work !== "Other" && qty < 1) || !payment) {
+      showToast("Please complete work type, quantity and payment method.");
+      return;
+    }
+    if (work === "Other" && !otherName) {
+      $("otherWorkName").focus();
+      showToast("Please enter the service you want.");
+      return;
+    }
+  } else if (!service) {
+    showToast("Please select a service.");
     return;
   }
-  if (work === "Other" && !otherName) {
-    $("otherWorkName").focus();
-    showToast("Please enter the service you want.");
-    return;
-  }
-  const files = [...$("files").files];
+
+  const files = fullForm ? [...$("files").files] : [];
   if (files.some((f) => f.size > MAX_FILE_SIZE)) {
     showToast("One or more files exceed the maximum allowed size.");
     return;
@@ -632,8 +708,8 @@ $("orderForm").addEventListener("submit", async (e) => {
   fd.append("workService", work === "Other" ? otherName : "");
   fd.append("quantity", String(qty));
   fd.append("payment", payment);
-  fd.append("location", $("locationText").value);
-  fd.append("maps", $("locationText").dataset.maps || "");
+  fd.append("location", fullForm ? $("locationText").value : "");
+  fd.append("maps", fullForm ? $("locationText").dataset.maps || "" : "");
   for (const f of files) fd.append("files", f);
 
   submitBtn.disabled = true;
@@ -657,6 +733,7 @@ $("orderForm").addEventListener("submit", async (e) => {
     $("cashNote").style.display = "none";
     $("locationText").value = "";
     delete $("locationText").dataset.maps;
+    updateServiceView();
     showToast(`Order Received Successfully — ${data.id}`);
   } catch (err) {
     // Never claim success if the backend didn't actually confirm it.
@@ -819,7 +896,9 @@ async function renderOrders() {
           }>Completed/Finished</option><option ${o.status === "Cancelled" ? "selected" : ""}>Cancelled</option></select></td>
   <td><div class="actions"><button class="btn secondary small printBtn" data-id="${esc(
     o.id
-  )}">Print</button>${
+  )}">Print</button><button class="btn secondary small downloadOrderBtn" data-id="${esc(
+    o.id
+  )}">Download</button>${
             o.maps ? `<a class="btn secondary small" href="${esc(o.maps)}" target="_blank" rel="noopener">Map</a>` : ""
           }${
             o.files?.map((f, i) => `<button class="btn dark small downloadBtn" data-id="${esc(o.id)}" data-file="${esc(
@@ -834,6 +913,9 @@ async function renderOrders() {
     s.addEventListener("change", () => updateOrderStatus(s.dataset.id, s.value))
   );
   document.querySelectorAll(".printBtn").forEach((b) => b.addEventListener("click", () => printInvoice(b.dataset.id)));
+  document
+    .querySelectorAll(".downloadOrderBtn")
+    .forEach((b) => b.addEventListener("click", () => downloadOrderInfo(b.dataset.id)));
   document
     .querySelectorAll(".downloadBtn")
     .forEach((b) => b.addEventListener("click", () => downloadFile(b.dataset.id, b.dataset.file)));
@@ -872,6 +954,39 @@ function printInvoice(id) {
   }</p><hr><p>Thank you for choosing SEBO SUPPLIES & STATIONARY.</p></div>`;
   window.print();
   setTimeout(() => ($("printArea").innerHTML = ""), 500);
+}
+
+function downloadOrderInfo(id) {
+  const o = currentOrders.find((x) => x.id === id);
+  if (!o) return;
+  const lines = [
+    "SEBO SUPPLIES & STATIONARY",
+    "Customer Order",
+    "----------------------------------------",
+    `Order ID: ${o.id}`,
+    `Date: ${new Date(o.created_at).toLocaleString()}`,
+    `Customer: ${o.name}`,
+    `Phone: ${o.phone}`,
+    `Service: ${o.service}`,
+    `Work Type: ${o.work_type}${o.work_service ? " — " + o.work_service : ""}`,
+    `Quantity: ${o.quantity}`,
+    `Payment: ${o.payment}`,
+    `Status: ${o.status}`,
+    `Notes: ${o.notes || "-"}`,
+    `Location: ${o.location || "-"}`,
+    `Files: ${o.files?.map((f) => f.name).join(", ") || "None"}`,
+    "----------------------------------------",
+    "Thank you for choosing SEBO SUPPLIES & STATIONARY.",
+  ];
+  const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `SEBO-order-${o.id}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
 }
 
 async function downloadFile(orderId, fileId) {
