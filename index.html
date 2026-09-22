@@ -10,8 +10,8 @@
 <link rel="preconnect" href="https://sebo-backend-production-7064.up.railway.app" crossorigin>
 <link rel="dns-prefetch" href="https://sebo-backend-production-7064.up.railway.app">
 <!-- Perf: preload only the first (visible) hero background, sized per device so phones don't fetch the desktop image -->
-<link rel="preload" as="image" fetchpriority="high" media="(max-width:700px)" href="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fm=avif&fit=crop&w=1000&q=65">
-<link rel="preload" as="image" fetchpriority="high" media="(min-width:701px)" href="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fm=avif&fit=crop&w=1800&q=65">
+<link rel="preload" as="image" fetchpriority="high" media="(max-width:700px)" href="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1200&q=90">
+<link rel="preload" as="image" fetchpriority="high" media="(min-width:701px)" href="https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=2200&q=90">
 <style>
 :root{
   --blue:#0b63ce;--blue2:#084b9a;--green:#138a45;--red:#d92828;
@@ -23,11 +23,14 @@ html{scroll-behavior:smooth}
 body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:transparent;min-height:100vh}
 body::before,body::after{content:"";position:fixed;inset:0;z-index:-3;background:transparent}
 .wallpaper{position:fixed;inset:0;z-index:-2;overflow:hidden;background:#0a0e14}
-.wallpaper .slide{position:absolute;inset:0;background-position:center;background-size:cover;opacity:0;transition:opacity 1.5s ease;filter:brightness(.6) saturate(1.05) contrast(1.05)}
+.wallpaper .slide{position:absolute;inset:0;background-position:center;background-size:cover;opacity:0;transition:opacity 1.5s ease;filter:none}
 .wallpaper .slide.active{opacity:1}
-.wallpaper .hero-bg{background-image:url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fm=avif&fit=crop&w=1800&q=65')}
-@media(max-width:700px){.wallpaper .hero-bg{background-image:url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fm=avif&fit=crop&w=1000&q=65')}}
-/* Keep the wallpaper fully natural: no dark overlay is applied. */
+.wallpaper .hero-bg{background-image:url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=2200&q=90')}
+@media(max-width:700px){.wallpaper .hero-bg{background-image:url('https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1200&q=90')}}
+/* The dark full-strength overlay that was hiding the background images has been
+   removed. A light, low-opacity tint is kept only so the light-colored cards/text
+   sitting on top of the photos stay readable — it no longer obscures the images. */
+.wallpaper::after{content:"";position:absolute;inset:0;background:rgba(6,10,16,.18);z-index:2}
 .container{width:min(1200px,94%);margin:auto}
 header{padding:22px 0 16px}
 .brand{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
@@ -151,8 +154,8 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
 <body>
 <div class="wallpaper" aria-hidden="true">
   <div class="slide active hero-bg"></div>
-  <div class="slide" data-bg="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fm=avif&fit=crop&w=1800&q=65" data-bg-m="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fm=avif&fit=crop&w=1000&q=65"></div>
-  <div class="slide" data-bg="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fm=avif&fit=crop&w=1800&q=65" data-bg-m="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fm=avif&fit=crop&w=1000&q=65"></div>
+  <div class="slide" data-bg="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2200&q=90" data-bg-m="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=90"></div>
+  <div class="slide" data-bg="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=2200&q=90" data-bg-m="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=1200&q=90"></div>
 </div>
 
 <header class="container">
@@ -669,7 +672,7 @@ $("orderForm").addEventListener("submit", async (e) => {
   let service = selectedService;
   let work = "";
   let otherName = "";
-  let qty = 0;
+  let qty = 1; // not applicable for this service — send a valid, harmless default
   let payment = "";
 
   if (fullForm) {
@@ -700,17 +703,17 @@ $("orderForm").addEventListener("submit", async (e) => {
   }
 
   const fd = new FormData();
-fd.append("name", name);
-fd.append("phone", phone);
-fd.append("service", service);
-fd.append("notes", $("notes").value.trim());
-fd.append("workType", work || "");
-fd.append("workService", work === "Other" ? otherName : "");
-fd.append("quantity", String(qty > 0 ? qty : 1));
-fd.append("payment", payment || "");
-fd.append("location", fullForm ? $("locationText").value : "");
-fd.append("maps", fullForm ? $("locationText").dataset.maps || "" : "");
-for (const f of files) fd.append("files", f);
+  fd.append("name", name);
+  fd.append("phone", phone);
+  fd.append("service", service);
+  fd.append("notes", $("notes").value.trim());
+  fd.append("workType", work);
+  fd.append("workService", work === "Other" ? otherName : "");
+  fd.append("quantity", String(qty));
+  fd.append("payment", payment);
+  fd.append("location", fullForm ? $("locationText").value : "");
+  fd.append("maps", fullForm ? $("locationText").dataset.maps || "" : "");
+  for (const f of files) fd.append("files", f);
 
   submitBtn.disabled = true;
   try {
@@ -991,28 +994,19 @@ function downloadOrderInfo(id) {
 
 async function downloadFile(orderId, fileId) {
   try {
-    async function downloadFile(orderId, fileId) {
-  try {
-    const res = await apiFetch(
-      `/api/orders/${encodeURIComponent(orderId)}/files/${encodeURIComponent(fileId)}/download`
-    );
-
+    const res = await apiFetch(`/api/orders/${encodeURIComponent(orderId)}/files/${encodeURIComponent(fileId)}`);
     if (!res.ok) throw new Error("File not found.");
-
     const blob = await res.blob();
     const disposition = res.headers.get("Content-Disposition") || "";
     const match = /filename="?([^"]+)"?/.exec(disposition);
     const filename = match ? match[1] : "download";
-
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
-
     setTimeout(() => URL.revokeObjectURL(url), 3000);
   } catch (e) {
     showToast("Unable to download the selected file.");
