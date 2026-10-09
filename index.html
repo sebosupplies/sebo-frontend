@@ -195,7 +195,7 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
         </div>
         <div class="full"><label for="notes">Maelezo ya Ziada</label><textarea id="notes" placeholder="Andika maelezo ya kazi yako..."></textarea></div>
 
-        <div class="full">
+        <div class="full" id="workTypeSection">
           <label>Aina ya Kazi</label>
           <div class="work-types">
             <div class="choice"><input type="radio" id="bw" name="workType" value="Black & White"><label for="bw">Black &amp; White</label></div>
@@ -213,13 +213,13 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
           <input id="quantity" type="number" min="1" step="1">
         </div>
 
-        <div class="full">
+        <div class="full" id="filesSection">
           <label for="files">Pakia Mafaili (PDF, Word, Excel, JPG, PNG)</label>
           <input id="files" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
           <div id="fileHint" class="price-desc">Unaweza kuchagua mafaili mengi kwa oda moja. Kila faili linaweza kuwa hadi 2GB, kulingana na nafasi inayopatikana kwenye browser/device.</div>
         </div>
 
-        <div class="full">
+        <div class="full" id="locationSection">
           <label>Location</label>
           <div class="location-row">
             <input id="locationText" readonly placeholder="Bonyeza kitufe kupata GPS location">
@@ -527,15 +527,35 @@ function isPrintOrPhotocopy(name) {
   return /print|photo\s*copy/i.test(name || "");
 }
 function updateOtherServiceNote() {
-  const work = document.querySelector('input[name="workType"]:checked')?.value || "";
   const selected = $("service").value;
-  const effective = work === "Other" ? $("otherWorkName").value.trim() || "Other service" : selected;
-  const show = !!effective && !isPrintOrPhotocopy(effective);
+  const show = !!selected && !isPrintOrPhotocopy(selected);
   $("otherServiceNote").style.display = show ? "block" : "none";
+  /* Hide (not delete) Aina ya Kazi, Pakia Mafaili and Location when the message is shown. */
+  if (show) {
+    $("workTypeSection").style.display = "none";
+    $("quantityWrap").style.display = "none";
+    $("filesSection").style.display = "none";
+    $("locationSection").style.display = "none";
+    // Clear hidden values so nothing invisible is submitted.
+    document.querySelectorAll('input[name="workType"]').forEach((r) => (r.checked = false));
+    $("otherWorkWrap").style.display = "none";
+    $("otherWorkName").required = false;
+    $("otherWorkName").value = "";
+    $("quantity").required = false;
+    $("quantity").value = "";
+    $("files").value = "";
+    $("locationText").value = "";
+    delete $("locationText").dataset.maps;
+  } else {
+    $("workTypeSection").style.display = "";
+    $("filesSection").style.display = "";
+    $("locationSection").style.display = "";
+    const picked = !!document.querySelector('input[name="workType"]:checked');
+    $("quantityWrap").style.display = picked ? "block" : "none";
+    $("quantity").required = picked;
+  }
 }
 $("service").addEventListener("change", updateOtherServiceNote);
-$("otherWorkName").addEventListener("input", updateOtherServiceNote);
-document.querySelectorAll('input[name="workType"]').forEach((x) => x.addEventListener("change", updateOtherServiceNote));
 document.querySelectorAll('input[name="payment"]').forEach((x) =>
   x.addEventListener("change", () => {
     const mobile = x.value === "Airtel Money";
@@ -574,17 +594,18 @@ $("orderForm").addEventListener("submit", async (e) => {
   const name = $("fullName").value.trim();
   const phone = $("phone").value.trim();
   const selectedService = $("service").value;
-  const work = document.querySelector('input[name="workType"]:checked')?.value || "";
+  const sectionsHidden = $("workTypeSection").style.display === "none";
+  const work = sectionsHidden ? "Other" : document.querySelector('input[name="workType"]:checked')?.value || "";
   const otherName = $("otherWorkName").value.trim();
-  const service = work === "Other" ? otherName || "Other service" : selectedService;
-  const qty = Number($("quantity").value || 0);
+  const service = sectionsHidden ? selectedService : work === "Other" ? otherName || "Other service" : selectedService;
+  const qty = sectionsHidden ? 1 : Number($("quantity").value || 0);
   const payment = document.querySelector('input[name="payment"]:checked')?.value || "";
 
   if (!service || !work || qty < 1 || !payment) {
     showToast("Please complete work type, quantity and payment method.");
     return;
   }
-  if (work === "Other" && !otherName) {
+  if (!sectionsHidden && work === "Other" && !otherName) {
     $("otherWorkName").focus();
     showToast("Please enter the service you want.");
     return;
@@ -627,9 +648,9 @@ $("orderForm").addEventListener("submit", async (e) => {
     $("otherWorkName").required = false;
     $("mobileNote").style.display = "none";
     $("cashNote").style.display = "none";
-    $("otherServiceNote").style.display = "none";
     $("locationText").value = "";
     delete $("locationText").dataset.maps;
+    updateOtherServiceNote();
     showToast(`Order Received Successfully — ${data.id}`);
   } catch (err) {
     // Never claim success if the backend didn't actually confirm it.
