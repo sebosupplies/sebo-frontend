@@ -186,6 +186,13 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
           <label for="service">Aina ya Huduma</label>
           <select id="service" required></select>
         </div>
+        <div id="otherServiceNote" class="full pay-note" style="font-weight:700;line-height:1.55">
+          <strong>THANK YOU FOR CHOOSING SEBO SUPPLIES &amp; STATIONARY!</strong><br><br>
+          We truly appreciate your interest in our services. For this service, we kindly invite you to <strong>visit our office at MBEYA - IKUTI PRIMARY</strong>, where our team will be happy to assist you.<br><br>
+          📞 <strong>Need more information? Call us on 0664381164.</strong><br><br>
+          📩 <strong>Already filled in your details?</strong> Please check that everything is correct, then tap <strong>“TUMA ODA”</strong> below so we can receive and process your request.<br><br>
+          ✨ <strong>SEBO SUPPLIES &amp; STATIONARY - We are always happy to serve you!</strong>
+        </div>
         <div class="full"><label for="notes">Maelezo ya Ziada</label><textarea id="notes" placeholder="Andika maelezo ya kazi yako..."></textarea></div>
 
         <div class="full">
@@ -225,13 +232,11 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
         <div class="full">
           <label>Njia ya Malipo</label>
           <div class="payments">
-            <div class="choice"><input type="radio" id="mpesa" name="payment" value="M-Pesa"><label for="mpesa">M-Pesa</label></div>
-            <div class="choice"><input type="radio" id="tigopesa" name="payment" value="Tigo Pesa"><label for="tigopesa">Tigo Pesa</label></div>
-            <div class="choice"><input type="radio" id="airtel" name="payment" value="Airtel Money"><label for="airtel">Airtel Money</label></div>
-            <div class="choice"><input type="radio" id="cash" name="payment" value="Cash"><label for="cash">CASH</label></div>
+            <div class="choice"><input type="radio" id="airtel" name="payment" value="Airtel Money"><label for="airtel">Lipa Namba (Airtel Money)</label></div>
+            <div class="choice"><input type="radio" id="cash" name="payment" value="Cash"><label for="cash">Cash</label></div>
           </div>
-          <div id="mobileNote" class="pay-note">0664381164, GEOFREY SHINGWA PETER</div>
-          <div id="cashNote" class="pay-note cash-note">OK, Welcome SEBO</div>
+          <div id="mobileNote" class="pay-note">💳 LIPA NAMBA: 148528405<br><span style="font-weight:700">👤 Geofrey Shingwa Peter<br>📱 Inapokea malipo kutoka mitandao yote ya simu.<br>✅ Tafadhali hifadhi uthibitisho wa malipo. Asante!</span></div>
+          <div id="cashNote" class="pay-note cash-note">Karibu ofisini SEBO SUPPLIES &amp; STATIONARY kwa ajili ya malipo.</div>
         </div>
 
         <div class="full" style="display:flex;justify-content:center">
@@ -284,7 +289,6 @@ window.SEBO_API_BASE_URL = "https://sebo-backend-production-7064.up.railway.app"
     </div>
 
     <section id="tab-orders" class="admin-section active">
-      <div class="notice">Customer GPS location is shown here when the customer taps “Tuma Location Yangu”. Use “Open Map” to view the customer position in Google Maps. Orders are stored securely on the server and can be managed from any device once you sign in as admin.</div>
       <div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Service</th><th>Work</th><th>Payment</th><th>Customer Location</th><th>Files</th><th>Status</th><th>Actions</th></tr></thead><tbody id="ordersBody"></tbody></table></div>
     </section>
 
@@ -518,9 +522,23 @@ document.querySelectorAll('input[name="workType"]').forEach((x) =>
     if (!other) $("otherWorkName").value = "";
   })
 );
+/* Message shown only when the chosen service is NOT Print / Photocopy. */
+function isPrintOrPhotocopy(name) {
+  return /print|photo\s*copy/i.test(name || "");
+}
+function updateOtherServiceNote() {
+  const work = document.querySelector('input[name="workType"]:checked')?.value || "";
+  const selected = $("service").value;
+  const effective = work === "Other" ? $("otherWorkName").value.trim() || "Other service" : selected;
+  const show = !!effective && !isPrintOrPhotocopy(effective);
+  $("otherServiceNote").style.display = show ? "block" : "none";
+}
+$("service").addEventListener("change", updateOtherServiceNote);
+$("otherWorkName").addEventListener("input", updateOtherServiceNote);
+document.querySelectorAll('input[name="workType"]').forEach((x) => x.addEventListener("change", updateOtherServiceNote));
 document.querySelectorAll('input[name="payment"]').forEach((x) =>
   x.addEventListener("change", () => {
-    const mobile = ["M-Pesa", "Tigo Pesa", "Airtel Money"].includes(x.value);
+    const mobile = x.value === "Airtel Money";
     $("mobileNote").style.display = mobile ? "block" : "none";
     $("cashNote").style.display = x.value === "Cash" ? "block" : "none";
   })
@@ -609,6 +627,7 @@ $("orderForm").addEventListener("submit", async (e) => {
     $("otherWorkName").required = false;
     $("mobileNote").style.display = "none";
     $("cashNote").style.display = "none";
+    $("otherServiceNote").style.display = "none";
     $("locationText").value = "";
     delete $("locationText").dataset.maps;
     showToast(`Order Received Successfully — ${data.id}`);
@@ -740,7 +759,7 @@ async function renderOrders() {
       : `<small>Location not provided</small>`
   }</td>
   <td><div class="preview-files">${
-    o.files?.length ? o.files.map((f) => `<span class="file-chip">${esc(f.name)}</span>`).join("") : "No files"
+    o.files?.length ? o.files.map((f) => `<span class="file-chip">${esc(f.name)} <button class="btn dark small downloadBtn" data-id="${esc(o.id)}" data-file="${esc(f.id)}" data-name="${esc(f.name)}">Download</button></span>`).join("") : "No files"
   }</div></td>
   <td><select class="statusSelect" data-id="${esc(
     o.id
@@ -753,10 +772,6 @@ async function renderOrders() {
     o.id
   )}">Print</button>${
             o.maps ? `<a class="btn secondary small" href="${esc(o.maps)}" target="_blank" rel="noopener">Map</a>` : ""
-          }${
-            o.files?.map((f, i) => `<button class="btn dark small downloadBtn" data-id="${esc(o.id)}" data-file="${esc(
-              f.id
-            )}">Download ${i + 1}</button>`).join("") || ""
           }<button class="btn danger small deleteOrder" data-id="${esc(o.id)}">Delete</button></div></td>
  </tr>`
         )
@@ -768,7 +783,7 @@ async function renderOrders() {
   document.querySelectorAll(".printBtn").forEach((b) => b.addEventListener("click", () => printInvoice(b.dataset.id)));
   document
     .querySelectorAll(".downloadBtn")
-    .forEach((b) => b.addEventListener("click", () => downloadFile(b.dataset.id, b.dataset.file)));
+    .forEach((b) => b.addEventListener("click", () => downloadFile(b.dataset.id, b.dataset.file, b.dataset.name)));
   document.querySelectorAll(".deleteOrder").forEach((b) => b.addEventListener("click", () => deleteOrder(b.dataset.id)));
 }
 
@@ -806,14 +821,23 @@ function printInvoice(id) {
   setTimeout(() => ($("printArea").innerHTML = ""), 500);
 }
 
-async function downloadFile(orderId, fileId) {
+async function downloadFile(orderId, fileId, fileName) {
   try {
     const res = await apiFetch(`/api/orders/${encodeURIComponent(orderId)}/files/${encodeURIComponent(fileId)}`);
-    if (!res.ok) throw new Error("File not found.");
+    if (!res.ok) {
+      let msg = "File not found.";
+      try {
+        msg = (await res.json()).error || msg;
+      } catch (e) {
+        /* no JSON body */
+      }
+      throw new Error(msg);
+    }
     const blob = await res.blob();
     const disposition = res.headers.get("Content-Disposition") || "";
     const match = /filename="?([^"]+)"?/.exec(disposition);
-    const filename = match ? match[1] : "download";
+    // Prefer the original name from the order's file list; the header is only a fallback.
+    const filename = fileName || (match ? match[1] : "download");
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -823,7 +847,7 @@ async function downloadFile(orderId, fileId) {
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 3000);
   } catch (e) {
-    showToast("Unable to download the selected file.");
+    showToast(e.message || "Unable to download the selected file.");
   }
 }
 
